@@ -7,3 +7,7 @@ and add more variable flexibility. Has not been tested since.
 
 otherwise relatively straightforward,
 let me know if you have any questions or feedback. 
+
+## RUN ##
+sudo chmod +x Migrate.sh
+sudo ./Migrate.sh
