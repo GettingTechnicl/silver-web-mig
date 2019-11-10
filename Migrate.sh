@@ -12,8 +12,8 @@ target_PWD="$(readlink -f .)"
 newuser=test4444
 # your choice of password
 password="Difficult Password"
-Sitename=test.com
-
+Sitename=test
+END=".com"
 # Make sure this is what is already listed in previous db if migrating
 dBname=testdb
 
@@ -21,7 +21,7 @@ dBname=testdb
 ## I drop my files in this location, configure these variables,##
 ## And have a site up and going within a few minutes or so   ##
 dropSite=/path/to/files
-
+adminEmail=test@test.com
 #### Set Local User Path Directory here ####
 sysuser=youruser
 ### Set your website location, usually /var/www/
@@ -37,7 +37,7 @@ target_PWD="$(readlink -f .)"
 logfile=$target_PWD/debug.log
 cpyCMD="rsync -razvh --progress"
 cryptPassword=$(perl -e 'print crypt($ARGV[0], "password")' $password)
-authFile=$target_PWD/mysql.auth
+authFile=${target_PWD}/sysFiles/mysql.auth
 ## Menu Functions                                                                                                                                                                                                                                                                                                            choice () {                                                                                                                                                                                                                                                                                                                      local choice=$1                                                                                                                                                                                                                                                                                                              if [[ ${opts[choice]} ]] # toggle
     then
         opts[choice]=
@@ -66,12 +66,12 @@ break
  ## Create New Website location and user, add user to www-data group ####
                 "Copy Site Files ${opts[2]}")
 
-sudo $cpyCMD ${dropSite}/${Sitename} ${SysSiLoc}
+sudo $cpyCMD ${dropSite}/${Sitename}${END} ${SysSiLoc}
 break
 ;;
 
                 "Create User ${opts[2]}")
-sudo useradd -m -p $cryptPassword -d ${SysSiLoc}${Sitename}/html $newuser
+sudo useradd -m -p $cryptPassword -d ${SysSiLoc}${Sitename}${END}/html $newuser
 sudo usermod -aG www-data $newuser
 break
 ;;
@@ -93,15 +93,45 @@ break
 ;;
 
 
+
+
                 "Final Permissions ${opts[5]}")
-sudo chown -R $newuser:www-data ${SysSiLoc}${Sitename}
-sudo chmod -R 755 ${SysSiLoc}${Sitename}
-sudo chmod g+rwx ${SysSiLoc}${Sitename}
-#sudo chmod o-rwx ${SysSiLoc}${Sitename}
+sudo chown -R $newuser:www-data ${SysSiLoc}${Sitename}${END}
+sudo chmod -R 755 ${SysSiLoc}${Sitename}${END}
+sudo chmod g+rwx ${SysSiLoc}${Sitename}${END}
+#sudo chmod o-rwx ${SysSiLoc}${Sitename}${END}
+break
+;;
+
+
+                "Set http conf ${opts[6]}")
+sudo cp $target_PWD/sysFiles/port80.conf /etc/apache2/sites-available/${Sitename}${END}.conf
+sudo sed -i "s|SITENAME|${Sitename}|g" /etc/apache2/sites-available/${Sitename}${END}.conf
+sudo sed -i "s|FRPGQ|${END}|g" /etc/apache2/sites-available/${Sitename}${END}.conf
+sudo sed -i "s|email@server.com|${adminEmail}|g" /etc/apache2/sites-available/${Sitename}${END}.conf
+sudo systemctl a2ensite ${Sitename}${END}.conf
+sudo systemctl reload apache2
+break
+;;
+
+
+
+                "Set HTTPS conf ${opts[7]}")
+sudo a2dissite ${Sitename}${END}.conf
+sudo cp $target_PWD/sysFiles/port443.conf /etc/apache2/sites-available/${Sitename}${END}.conf
+sudo sed -i "s|SITENAME|${Sitename}|g" /etc/apache2/sites-available/${Sitename}${END}.conf
+sudo sed -i "s|FRPGQ|${END}|g" /etc/apache2/sites-available/${Sitename}${END}.conf
+sudo sed -i "s|email@server.com|${adminEmail}|g" /etc/apache2/sites-available/${Sitename}${END}.conf
+sudo a2ensite ${Sitename}${END}.conf
+sudo systemctl reload apache2
 break 2
 ;;
 
 
+                "Get SSL ${opts[8]}")
+sudo certbot --apache -d ${Sitename}${END} -d www.${Sitename}${END}
+break
+;;
 
 *) printf '%s\n' 'invalid option';;
 esac
