@@ -66,7 +66,7 @@ break
  ## Create New Website location and user, add user to www-data group ####
                 "Copy Site Files ${opts[2]}")
 
-sudo $cpyCMD /home/${sysuser}${dropSite}/${Sitename} ${SysSiLoc}
+sudo $cpyCMD ${dropSite}/${Sitename} ${SysSiLoc}
 break
 ;;
 
