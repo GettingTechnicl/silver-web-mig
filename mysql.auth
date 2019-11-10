@@ -1,8 +1,0 @@
-## This file holds your mysql credentials ##
-## This is not the most secure, although  ##
-## Safer than utilizing your Password in a##
-## Shell.                                 ##
-
-[client]
-user=MyUser
-password=DifficultPassword
