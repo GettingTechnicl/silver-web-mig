@@ -99,7 +99,7 @@ break
 sudo chown -R $newuser:www-data ${SysSiLoc}${Sitename}${END}
 sudo chmod -R 755 ${SysSiLoc}${Sitename}${END}
 sudo chmod g+rwx ${SysSiLoc}${Sitename}${END}
-#sudo chmod o-rwx ${SysSiLoc}${Sitename}${END}
+sudo chmod -R 770 ${SysSiLoc}${Sitename}${END}/wp-content
 break
 ;;
 
