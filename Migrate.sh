@@ -34,11 +34,14 @@ sysSiLoc=/var/www/
 ################################################
 ################################################
 target_PWD="$(readlink -f .)"
-logfile=$target_PWD/debug.log
+logfile=""$target_PWD/debug.log""
 cpyCMD="rsync -razvh --progress"
-cryptPassword=$(perl -e 'print crypt($ARGV[0], "password")' $password)
+cryptPassword=""$(perl -e 'print crypt($ARGV[0], "password")' $password)""
 authFile=${target_PWD}/sysFiles/mysql.auth
-## Menu Functions                                                                                                                                                                                                                                                                                                            choice () {                                                                                                                                                                                                                                                                                                                      local choice=$1                                                                                                                                                                                                                                                                                                              if [[ ${opts[choice]} ]] # toggle
+## Menu Functions
+choice () {
+local choice=$1
+if [[ ${opts[choice]} ]] # toggle
     then
         opts[choice]=
     else
@@ -96,10 +99,10 @@ break
 
 
                 "Final Permissions ${opts[5]}")
-sudo chown -R $newuser:www-data ${SysSiLoc}${Sitename}${END}
-sudo chmod -R 755 ${SysSiLoc}${Sitename}${END}
-sudo chmod g+rwx ${SysSiLoc}${Sitename}${END}
-sudo chmod -R 770 ${SysSiLoc}${Sitename}${END}/wp-content
+sudo chown -R $newuser:www-data ${SysSiLoc}${Sitename}${END} >> debug.log
+sudo chmod -R 755 ${SysSiLoc}${Sitename}${END} > debug.log
+sudo chmod g+rwx ${SysSiLoc}${Sitename}${END} > debug.log
+sudo chmod -R 770 ${SysSiLoc}${Sitename}${END}/wp-content > debug.log
 break
 ;;
 
