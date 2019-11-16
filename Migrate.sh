@@ -100,8 +100,8 @@ break
 
 "Final Permissions ${opts[6]}")
 sudo chown -R $newuser:www-data ${SysSiLoc}${Sitename}${END}
-sudo find ${SysSiLoc}${Sitename}${END} -type f -exec chmod 664
-sudo find ${SysSiLoc}${Sitename}${END} -type d -exec chmod 2775
+sudo find ${SysSiLoc}${Sitename}${END} -type f -exec chmod 664 {} +
+sudo find ${SysSiLoc}${Sitename}${END} -type d -exec chmod 2775 {} +
 sudo chmod g+rwx ${SysSiLoc}${Sitename}${END}
 #sudo chmod o-rwx ${SysSiLoc}${Sitename}${END}
 break
