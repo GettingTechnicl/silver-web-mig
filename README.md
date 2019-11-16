@@ -9,6 +9,6 @@ otherwise relatively straightforward,
 let me know if you have any questions or feedback. 
 
 ## RUN ##
+git clone https://github.com/GettingTechnicl/silver-web-mig.git
 sudo chmod +x Migrate.sh
-
 sudo ./Migrate.sh
