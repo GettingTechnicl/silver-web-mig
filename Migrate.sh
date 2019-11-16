@@ -98,20 +98,12 @@ break
 
 
 
-<<<<<<< HEAD
-                "Final Permissions ${opts[6]}")
+"Final Permissions ${opts[6]}")
 sudo chown -R $newuser:www-data ${SysSiLoc}${Sitename}${END}
 sudo find ${SysSiLoc}${Sitename}${END} -type f -exec chmod 664
-sudo find ${SysSiLoc}${Sitename}${END} -type d -exec chmod 775
+sudo find ${SysSiLoc}${Sitename}${END} -type d -exec chmod 2775
 sudo chmod g+rwx ${SysSiLoc}${Sitename}${END}
 #sudo chmod o-rwx ${SysSiLoc}${Sitename}${END}
-=======
-                "Final Permissions ${opts[5]}")
-sudo chown -R $newuser:www-data ${SysSiLoc}${Sitename}${END} >> debug.log
-sudo chmod -R 755 ${SysSiLoc}${Sitename}${END} > debug.log
-sudo chmod g+rwx ${SysSiLoc}${Sitename}${END} > debug.log
-sudo chmod -R 770 ${SysSiLoc}${Sitename}${END}/wp-content > debug.log
->>>>>>> c9925f72bc73afd3238b08bcc88b043987ed321d
 break
 ;;
 
