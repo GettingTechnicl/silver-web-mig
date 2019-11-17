@@ -6,9 +6,11 @@ Tool I hacked together, I edited the script to remove personal info
 and add more variable flexibility. Has not been tested since.
 
 otherwise relatively straightforward,
-let me know if you have any questions or feedback. 
+let me know if you have any questions or feedback.
 
 ## RUN ##
-sudo chmod +x Migrate.sh
+git clone https://github.com/GettingTechnicl/silver-web-mig.git
 
-sudo ./Migrate.sh
+sudo chmod +x silver-web-mig/Migrate.sh
+
+sudo silver-web-mig/Migrate.sh
