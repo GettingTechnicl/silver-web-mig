@@ -113,7 +113,7 @@ sudo cp $target_PWD/sysFiles/port80.conf /etc/apache2/sites-available/${Sitename
 sudo sed -i "s|SITENAME|${Sitename}|g" /etc/apache2/sites-available/${Sitename}${END}.conf
 sudo sed -i "s|FRPGQ|${END}|g" /etc/apache2/sites-available/${Sitename}${END}.conf
 sudo sed -i "s|email@server.com|${adminEmail}|g" /etc/apache2/sites-available/${Sitename}${END}.conf
-sudo systemctl a2ensite ${Sitename}${END}.conf
+sudo a2ensite ${Sitename}${END}.conf
 sudo systemctl reload apache2
 break
 ;;
