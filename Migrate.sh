@@ -22,8 +22,7 @@ dBname=testdb
 ## And have a site up and going within a few minutes or so   ##
 dropSite=/path/to/files
 adminEmail=test@test.com
-#### Set Local User Path Directory here ####
-sysuser=youruser
+
 ### Set your website location, usually /var/www/
 sysSiLoc=/var/www/
 
@@ -37,7 +36,9 @@ target_PWD="$(readlink -f .)"
 logfile=""$target_PWD/debug.log""
 cpyCMD="rsync -razvh --progress"
 cryptPassword=""$(perl -e 'print crypt($ARGV[0], "password")' $password)""
-authFile=${target_PWD}/sysFiles/mysql.auth
+authFileTemp=${target_PWD}/sysFiles/mysql.auth
+authFile="~/.config/silver-web-mig/mysql.auth"
+authFileFolder="~/.config/silver-web-mig"
 ## Menu Functions
 choice () {
 local choice=$1
@@ -62,6 +63,8 @@ do
 
                   "Set Credentials ${opts[1]}")
 
+mkdir -p ${authFileFolder}
+cp -n ${authFileTemp} ${authFile}
 nano ${authFile}
 break
 ;;
@@ -69,12 +72,12 @@ break
  ## Create New Website location and user, add user to www-data group ####
                 "Copy Site Files ${opts[2]}")
 
-sudo $cpyCMD ${dropSite}/${Sitename}${END} ${SysSiLoc}
+sudo $cpyCMD ${dropSite}/${Sitename}${END} ${sysSiLoc}
 break
 ;;
 
                 "Create User ${opts[3]}")
-sudo useradd -m -p $cryptPassword -d ${SysSiLoc}${Sitename}${END}/html $newuser
+sudo useradd -m -p $cryptPassword -d ${sysSiLoc}${Sitename}${END}/html $newuser
 sudo usermod -aG www-data $newuser
 break
 ;;
@@ -99,11 +102,27 @@ break
 
 
 "Final Permissions ${opts[6]}")
-sudo chown -R $newuser:www-data ${SysSiLoc}${Sitename}${END}
-sudo find ${SysSiLoc}${Sitename}${END} -type f -exec chmod 664 {} +
-sudo find ${SysSiLoc}${Sitename}${END} -type d -exec chmod 2775 {} +
-#sudo chmod g+rwx ${SysSiLoc}${Sitename}${END}
-#sudo chmod o-rwx ${SysSiLoc}${Sitename}${END}
+sudo chown -R $newuser:www-data ${sysSiLoc}${Sitename}${END}
+sudo mv ${sysSiLoc}${Sitename}${END}/html/wp-config.php ${sysSiLoc}${Sitename}${END}/
+sudo tee -a ${sysSiLoc}${Sitename}${END}/wp-config.php > /dev/null <<EOT
+
+################################
+######## Wordpress FTP #########
+######### Do Not Edit ##########
+################################
+define( 'FS_METHOD', 'direct' );
+define( 'FS_METHOD', 'ftpext' );
+define( 'FTP_BASE', '${sysSiLoc}${Sitename}${END}/html/' );
+define( 'FTP_CONTENT_DIR', '${sysSiLoc}${Sitename}${END}/html/wp-content/' );
+define( 'FTP_PLUGIN_DIR ', '${sysSiLoc}${Sitename}${END}/html/wp-content/plugins/' );
+define( 'FTP_USER', '${newuser}' );
+define( 'FTP_PASS', '${password}' );
+define( 'FTP_HOST', 'localhost:990' );
+define( 'FTP_SSL', true );
+EOT
+sudo find ${sysSiLoc}${Sitename}${END} -type f -exec chmod 664 {} +
+sudo find ${sysSiLoc}${Sitename}${END} -type d -exec chmod 2775 {} +
+sudo chmod 440 ${sysSiLoc}${Sitename}${END}/wp-config.php
 break
 ;;
 
