@@ -108,6 +108,7 @@ sudo tee -a ${sysSiLoc}${Sitename}${END}/wp-config.php > /dev/null <<EOT
 
 ################################
 ######## Wordpress FTP #########
+#### Added By Systems Admin ####
 ######### Do Not Edit ##########
 ################################
 define( 'FS_METHOD', 'direct' );
